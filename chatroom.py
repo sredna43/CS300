@@ -21,7 +21,7 @@ class Server:
             try:    
                 data = c.recv(2048)
                 if data:
-                    print("<" + a[0] + ">" + data)
+                    print("<" + a[0] + ">" + str(data,'utf-8'))
                     
                     message_to_send = "<" + a[0] + ">" + data
                     broadcast(message_to_send, c)
@@ -62,14 +62,14 @@ class Client:
         iThread.start()
         
         while True:
-            data = self.sock.recv(1024)
+            data = self.sock.recv(2048)
             if not data:
                 break
             print(str(data, 'utf-8'))
         
     def sendMsg(self):
         while True:
-                        self.sock.send(bytes(input(""), 'utf-8'))
+            self.sock.send(bytes(input(""), 'utf-8'))
 
 if (len(sys.argv) > 1):
     client = Client(sys.argv[1])
