@@ -5,21 +5,44 @@ import sys
 class Server:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connections = []
+    try:
+        ip_addr = str(sys.argv[1])
+        Port = str(sys.argv[2])
+    except:
+        ip_addr = '0.0.0.0'
+        Port = 9009
     def __init__(self):
-        self.sock.bind(('0.0.0.0', 10000))
-        self.sock.listen(1)
+        self.sock.bind((self.ip_addr, self.Port))
+        self.sock.listen(10)
         
     def handler(self, c, a):
+        c.send(bytes("Welcome to CloudBot", 'utf-8'))
         while True:
-            data = c.recv(1024)
-            for connection in self.connections:
-                connection.send(data)
-            if not data:
-                print(str(a[0]) + ':' + str(a[1]), "disconnected")
-                self.connections.remove(c)
-                c.close()
-                break
+            try:    
+                data = c.recv(2048)
+                if data:
+                    print("<" + a[0] + ">" + data)
+                    
+                    message_to_send = "<" + a[0] + ">" + data
+                    broadcast(message_to_send, c)
+            
+            except:
+                continue
     
+    def broadcast(message, conn):
+        for clients in connections:
+            if clients != conn:
+                try:
+                    clients.send(bytes(message, 'utf-8'))
+                except:
+                    clients.close()
+                    
+                    remove(clients)
+                    
+    def remove(conn):
+        if conn in connections:
+            connections.remove(conn)
+            
     def run(self):
         while True:
             c, a = self.sock.accept()
@@ -32,7 +55,7 @@ class Server:
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def __init__(self, address):
-        self.sock.connect((address, 10000))
+        self.sock.connect((address, 9009))
         
         iThread = threading.Thread(target=self.sendMsg)
         iThread.daemon = True
