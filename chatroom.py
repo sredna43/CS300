@@ -31,7 +31,7 @@ class Server:
     
     def broadcast(message, conn):
         for clients in connections:
-            if clients != conn:
+            #if clients != conn:
                 try:
                     clients.send(bytes(message, 'utf-8'))
                 except:
