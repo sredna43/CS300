@@ -20,16 +20,15 @@ class Server:
         while True:
             try:    
                 data = c.recv(2048)
-                if data:
-                    print("<" + str(a[0]) + ":" + str(a[1]) + ">" + str(data)
-                    
-                    message_to_send = ("<" + str(a[0]) + ":" + str(a[1]) + ">" + str(data))
-                    broadcast(message_to_send, c)
+                if data:                    
+                    message = "<" + str(a[0]) + ":" + str(a[1]) + "> " + str(data, 'utf-8')
+                    print(message)
+                    self.broadcast(message, c)
             except:
                 continue
     
-    def broadcast(message, conn):
-        for clients in connections:
+    def broadcast(self, message, conn):
+        for clients in self.connections:
             if clients != conn:
                 try:
                     clients.send(bytes(message, 'utf-8'))
@@ -38,9 +37,9 @@ class Server:
                     
                     remove(clients)
                     
-    def remove(conn):
-        if conn in connections:
-            connections.remove(conn)
+    def remove(self, conn):
+        if conn in self.connections:
+            self.connections.remove(conn)
             
     def run(self):
         while True:
