@@ -25,10 +25,6 @@ class Server:
                     
                     message_to_send = "<" + a[0] + a[1] + ">" + str(data,'utf-8')
                     broadcast(message_to_send, c)
-
-                else:
-                    remove(c)
-            
             except:
                 continue
     
