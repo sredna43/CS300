@@ -21,9 +21,9 @@ class Server:
             try:    
                 data = c.recv(2048)
                 if data:
-                    print("<" + a[0] + ":" + a[1] + ">" + str(data,'utf-8'))
+                    print("<" + str(a[0]) + ":" + str(a[1]) + ">" + str(data)
                     
-                    message_to_send = "<" + a[0] + a[1] + ">" + str(data,'utf-8')
+                    message_to_send = ("<" + str(a[0]) + ":" + str(a[1]) + ">" + str(data))
                     broadcast(message_to_send, c)
             except:
                 continue
