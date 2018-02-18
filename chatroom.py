@@ -23,7 +23,7 @@ class Server:
                 if data:
                     print("<" + a[0] + ">" + str(data,'utf-8'))
                     
-                    message_to_send = "<" + a[0] + ">" + data
+                    message_to_send = "<" + a[0] + ">" + str(data,'utf-8')
                     broadcast(message_to_send, c)
             
             except:
