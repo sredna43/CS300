@@ -21,17 +21,20 @@ class Server:
             try:    
                 data = c.recv(2048)
                 if data:
-                    print("<" + a[0] + ">" + str(data,'utf-8'))
+                    print("<" + a[0] + ":" + a[1] + ">" + str(data,'utf-8'))
                     
-                    message_to_send = "<" + a[0] + ">" + str(data,'utf-8')
+                    message_to_send = "<" + a[0] + a[1] + ">" + str(data,'utf-8')
                     broadcast(message_to_send, c)
+
+                else:
+                    remove(c)
             
             except:
                 continue
     
     def broadcast(message, conn):
         for clients in connections:
-            #if clients != conn:
+            if clients != conn:
                 try:
                     clients.send(bytes(message, 'utf-8'))
                 except:
