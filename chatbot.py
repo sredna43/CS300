@@ -4,6 +4,10 @@
 import socket
 import threading
 import sys
+<<<<<<< HEAD
+=======
+import random
+>>>>>>> 08ed39567aab5cef62bbeb6dd09d9abc91e876d0
 
 #server class, to be used on AWS machine
 class Server:
@@ -25,17 +29,31 @@ class Server:
             try:    
                 data = c.recv(2048)
                 if data:                    
+<<<<<<< HEAD
                     message = "<" + str(a[0]) + ":" + str(a[1]) + "> " + str(data, 'utf-8')
+=======
+                    message = str(data, 'utf-8')
+>>>>>>> 08ed39567aab5cef62bbeb6dd09d9abc91e876d0
                     print(message)
                     self.broadcast(message, c)
             except:
                 continue
     
+<<<<<<< HEAD
     def broadcast(self, message, conn):
         for clients in self.connections:
             if clients != conn:
                 try:
                     clients.send(bytes(message, 'utf-8'))
+=======
+    def broadcast(self, m, conn):
+        message = self.respond(m)
+        send_message = "Cloudbot: " + message
+        for clients in self.connections:
+            if clients == conn:
+                try:
+                    clients.send(bytes(send_message, 'utf-8'))
+>>>>>>> 08ed39567aab5cef62bbeb6dd09d9abc91e876d0
                 except:
                     clients.close()
                     
@@ -54,6 +72,26 @@ class Server:
             self.connections.append(c)
             print(str(a[0]) + ':' + str(a[1]), "connected")
 
+<<<<<<< HEAD
+=======
+    def respond(self, m):
+        greetings = ("hello", "hi", "greetings", "sup", "what's up", "hey", "hola")
+        farewells = ("goodbye", "bye", "see ya", "adios")
+        greeting_responses = ["hello!", "hi", "greetings", "good day"]
+        farewell_responses = ["goodbye!", "see you soon!", "have a nice day!", "adios", "bye now"]
+
+        #Here come the if statements
+        for word in m.split():
+            if word.lower() in greetings:
+                return random.choice(greeting_responses)
+            elif word.lower() in farewells:
+                return random.choice(farewell_responses)
+        
+            
+        '''nothing has understood what was said'''
+        return "I'm sorry, I don't know that one."
+
+>>>>>>> 08ed39567aab5cef62bbeb6dd09d9abc91e876d0
 #client class, to be used on local machine
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
