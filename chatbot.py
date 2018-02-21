@@ -1,7 +1,12 @@
+''' ChatBot Homework 1 Anders Olson '''
+
+#import necessary files for chat server
 import socket
 import threading
 import sys
 
+
+#server class, to be used on AWS machine
 class Server:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connections = []
@@ -49,7 +54,8 @@ class Server:
             cThread.start()
             self.connections.append(c)
             print(str(a[0]) + ':' + str(a[1]), "connected")
-            
+			
+#client class, to be used on local machine
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     def __init__(self, address):
