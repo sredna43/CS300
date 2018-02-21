@@ -32,6 +32,7 @@ class Server:
                     self.broadcast(message, c)
             except:
                 continue
+
     def broadcast(self, m, conn):
         message = self.respond(m)
         send_message = "Cloudbot: " + message
@@ -39,6 +40,7 @@ class Server:
             if clients == conn:
                 try:
                     clients.send(bytes(send_message, 'utf-8'))
+
                     clients.close()
                     
                     remove(clients)
@@ -55,6 +57,7 @@ class Server:
             cThread.start()
             self.connections.append(c)
             print(str(a[0]) + ':' + str(a[1]), "connected")
+
 
     def respond(self, m):
         #questions: 0=none, 1=user state, 2=name
