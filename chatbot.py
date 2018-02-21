@@ -11,6 +11,8 @@ from datetime import datetime
 class Server:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connections = []
+    #what question did we ask the user? 0=none, 1=name, 2=well being
+    question_asked = 0
     try:
         ip_addr = str(sys.argv[1])
         Port = str(sys.argv[2])
@@ -60,19 +62,25 @@ class Server:
 
 
     def respond(self, m):
-        #questions: 0=none, 1=user state, 2=name
-        question_asked = 0
         greetings = ("hello", "hi", "greetings", "sup", "what's up", "hey", "hola")
         farewells = ("goodbye", "bye", "see ya", "adios")
         greeting_responses = ["hello!", "hi", "greetings", "good day"]
         farewell_responses = ["goodbye!", "see you soon!", "have a nice day!", "adios", "bye now"]
         date_time = ["time", " time?", "date", "date?", "day", "today?"]
-        q_state = ["how are you", "how are you?", "how are ya", "how are ya?", "hello, how are you?", "hello, how are you"]
+        q_state = ["how are you", "how are you?", "how are ya", "how are ya?", "hello, how are you?", "hello, how are you", "hello how are you?"]
         cpu_state = ["fine, thanks", "not well, I just became sentient", "I'm a computer, I feel nothing", "I'm good, how are you?"]
+        good_feelings = ["good", "great", "fantastic", "stellar", "ok", "alright", "good,"]
+        bad_feelings = ["tired", "sick", "bad", "annoyed", "frustrated", "pissed", "mad"]
+        good_news = ["I'm glad to hear that", "Great!", "I hope it stays that way", "Wonderful"]
+        bad_news = ["Oh no, I'm so sorry to hear that", "Oh... sorry", "It can only get better! :)"]
+        
 
         #Here come the if statements
         if m.lower() in q_state:
-            return random.choice(cpu_state)
+            retstring = random.choice(cpu_state)
+            if retstring == "I'm good, how are you?":
+                self.question_asked = 1
+            return retstring
         for word in m.split():
             if word.lower() in greetings:
                 return random.choice(greeting_responses)
@@ -81,9 +89,16 @@ class Server:
             elif word.lower() in date_time:
                 retstring = "The time is " + datetime.now().strftime('%H:%M:%S') + " and today is " + datetime.now().strftime('%m/%d/%Y')
                 return retstring
+            elif question_asked == 1 and word.lower() in good_feelings:
+                question_asked = 0
+                return random.choice(good_news)
+            elif question_asked == 1 and word.lower() in bad_feelings:
+                question_asked = 0
+                return random.choice(bad_news)
         
             
         '''nothing has understood what was said'''
+        # WRITE m TO A FILE, SEND TO ADMIN MACHINE TOO
         return "I'm sorry, I don't know that one."
     
 #client class, to be used on local machine
