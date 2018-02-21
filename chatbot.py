@@ -26,13 +26,12 @@ class Server:
         while True:
             try:    
                 data = c.recv(2048)
-                if data:                    
+                if data:
                     message = str(data, 'utf-8')
                     print(message)
                     self.broadcast(message, c)
             except:
                 continue
-    
     def broadcast(self, m, conn):
         message = self.respond(m)
         send_message = "Cloudbot: " + message
@@ -40,7 +39,6 @@ class Server:
             if clients == conn:
                 try:
                     clients.send(bytes(send_message, 'utf-8'))
-                except:
                     clients.close()
                     
                     remove(clients)
@@ -84,7 +82,7 @@ class Server:
             
         '''nothing has understood what was said'''
         return "I'm sorry, I don't know that one."
-
+    
 #client class, to be used on local machine
 class Client:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
