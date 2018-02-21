@@ -5,6 +5,7 @@ import socket
 import threading
 import sys
 import random
+from datetime import datetime
 
 #server class, to be used on AWS machine
 class Server:
@@ -58,17 +59,27 @@ class Server:
             print(str(a[0]) + ':' + str(a[1]), "connected")
 
     def respond(self, m):
+        #questions: 0=none, 1=user state, 2=name
+        question_asked = 0
         greetings = ("hello", "hi", "greetings", "sup", "what's up", "hey", "hola")
         farewells = ("goodbye", "bye", "see ya", "adios")
         greeting_responses = ["hello!", "hi", "greetings", "good day"]
         farewell_responses = ["goodbye!", "see you soon!", "have a nice day!", "adios", "bye now"]
+        date_time = ["time", " time?", "date", "date?", "day", "today?"]
+        q_state = ["how are you", "how are you?", "how are ya", "how are ya?", "hello, how are you?", "hello, how are you"]
+        cpu_state = ["fine, thanks", "not well, I just became sentient", "I'm a computer, I feel nothing", "I'm good, how are you?"]
 
         #Here come the if statements
+        if m.lower() in q_state:
+            return random.choice(cpu_state)
         for word in m.split():
             if word.lower() in greetings:
                 return random.choice(greeting_responses)
             elif word.lower() in farewells:
                 return random.choice(farewell_responses)
+            elif word.lower() in date_time:
+                retstring = "The time is " + datetime.now().strftime('%H:%M:%S') + " and today is " + datetime.now().strftime('%m/%d/%Y')
+                return retstring
         
             
         '''nothing has understood what was said'''
