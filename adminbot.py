@@ -22,6 +22,7 @@ for row in answers:
 	c.execute("UPDATE unknowns set admin_answer=? WHERE question=?",(answer,row[1]))
 	c.execute("UPDATE unknowns set has_answer=1 WHERE question=?",r[1])
 	conn.commit()
+	print(".......................................")
 	
 conn.close()
 	
