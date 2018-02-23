@@ -28,5 +28,6 @@ while rowsleft:
 		print(".......................................")
 	rowsleft = False
 conn.close()
+print("Done")
 	
 	
