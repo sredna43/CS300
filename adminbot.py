@@ -18,7 +18,7 @@ else:
 answers = c.execute("SELECT * FROM unknowns WHERE has_answer=0")
 for row in answers:
 	print("Question: " + row[1])
-	answer = intput("Answer: ")
+	answer = input("Answer: ")
 	c.execute("UPDATE unknowns set admin_answer=? WHERE question=?",(answer,row[1]))
 	conn.commit()
 	
