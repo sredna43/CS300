@@ -19,8 +19,8 @@ answers = c.execute("SELECT * FROM unknowns WHERE has_answer=0")
 for row in answers:
 	print("Question: " + row[1])
 	answer = input("Answer: ")
-	c.execute("UPDATE unknowns set admin_answer=? WHERE question=?",(answer,row[1]))
-	c.execute("UPDATE unknowns set has_answer=1 WHERE question=?",row[1])
+	c.execute("UPDATE unknowns SET admin_answer=? WHERE question=?",(answer,row[1]))
+	c.execute("UPDATE unknowns SET has_answer=1 WHERE question=?",(row[1],))
 	conn.commit()
 	print(".......................................")
 	
