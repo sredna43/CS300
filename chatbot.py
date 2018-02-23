@@ -6,19 +6,18 @@ import threading
 import sys
 import random
 from datetime import datetime
+import sqlite3
+import os.path
 
 #server class, to be used on AWS machine
 class Server:
+    '''server set up'''
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     connections = []
     #what question did we ask the user? 0=none, 1=name, 2=well being
     question_asked = 0
-    try:
-        ip_addr = str(sys.argv[1])
-        Port = str(sys.argv[2])
-    except:
-        ip_addr = '0.0.0.0'
-        Port = 9009
+    ip_addr = '0.0.0.0'
+    Port = 9009
     def __init__(self):
         self.sock.bind((self.ip_addr, self.Port))
         self.sock.listen(10)
@@ -42,9 +41,8 @@ class Server:
             if clients == conn:
                 try:
                     clients.send(bytes(send_message, 'utf-8'))
-
+                except:
                     clients.close()
-                    
                     remove(clients)
                     
     def remove(self, conn):
@@ -62,18 +60,19 @@ class Server:
 
 
     def respond(self, m):
+        ### BASIC RESPNOSES ###
+        dontknow = ("I don't understand",)
         greetings = ("hello", "hi", "greetings", "sup", "what's up", "hey", "hola")
         farewells = ("goodbye", "bye", "see ya", "adios")
         greeting_responses = ["hello!", "hi", "greetings", "good day"]
         farewell_responses = ["goodbye!", "see you soon!", "have a nice day!", "adios", "bye now"]
-        date_time = ["time", " time?", "date", "date?", "day", "today?"]
+        date_time = ["time", "time?", "date", "date?", "day", "today?"]
         q_state = ["how are you", "how are you?", "how are ya", "how are ya?", "hello, how are you?", "hello, how are you", "hello how are you?"]
         cpu_state = ["fine, thanks", "not well, I just became sentient", "I'm a computer, I feel nothing", "I'm good, how are you?"]
         good_feelings = ["good", "great", "fantastic", "stellar", "ok", "alright", "good,"]
         bad_feelings = ["tired", "sick", "bad", "annoyed", "frustrated", "pissed", "mad"]
         good_news = ["I'm glad to hear that", "Great!", "I hope it stays that way", "Wonderful"]
         bad_news = ["Oh no, I'm so sorry to hear that", "Oh... sorry", "It can only get better! :)"]
-        
 
         #Here come the if statements
         if m.lower() in q_state:
@@ -82,6 +81,8 @@ class Server:
                 self.question_asked = 1
             return retstring
         for word in m.split():
+            #print(word)
+            #print(m.split())
             if word.lower() in greetings:
                 return random.choice(greeting_responses)
             elif word.lower() in farewells:
@@ -89,17 +90,40 @@ class Server:
             elif word.lower() in date_time:
                 retstring = "The time is " + datetime.now().strftime('%H:%M:%S') + " and today is " + datetime.now().strftime('%m/%d/%Y')
                 return retstring
-            elif question_asked == 1 and word.lower() in good_feelings:
+            elif self.question_asked == 1 and word.lower() in good_feelings:
                 question_asked = 0
                 return random.choice(good_news)
-            elif question_asked == 1 and word.lower() in bad_feelings:
+            elif self.question_asked == 1 and word.lower() in bad_feelings:
                 question_asked = 0
                 return random.choice(bad_news)
-        
             
-        '''nothing has understood what was said'''
-        # WRITE m TO A FILE, SEND TO ADMIN MACHINE TOO
-        return "I'm sorry, I don't know that one."
+        #Create a database if needed, or query it"
+        if not os.path.isfile("answers.db"):
+            print("new database created: answers.db")
+            conn = sqlite3.connect("answers.db")
+            c = conn.cursor()
+            c.execute('''CREATE TABLE unknowns (has_answer, question, admin_answer)''')
+            c.execute("INSERT INTO unknowns VALUES (1,'test question','test answer')")
+        else:
+            conn = sqlite3.connect("answers.db")
+            c = conn.cursor()
+
+        #Use the database
+        c.execute("SELECT * FROM unknowns WHERE has_answer=1")
+        answers = c.fetchall()
+
+        for a in answers:
+            if a[1] == m.lower():
+                conn.commit()
+                conn.close()
+                return a[2]
+
+        c.execute("INSERT INTO unknowns VALUES (?,?,?)", (0,m,dontknow[0]))
+        
+        conn.commit()
+        conn.close()
+        return random.choice(dontknow)
+            
     
 #client class, to be used on local machine
 class Client:
