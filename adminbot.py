@@ -15,7 +15,8 @@ if os.path.isfile("answers.db"):
 else:
 	print("Error: No matching database")
 	sys.exit(1)
-answers = c.execute("SELECT * FROM unknowns WHERE has_answer=0")
+c.execute("SELECT * FROM unknowns WHERE has_answer=0")
+answers = c.fetchall()
 
 rowsleft = True
 while rowsleft:
