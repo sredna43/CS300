@@ -6,3 +6,5 @@ Topics Course in Cloud Computing
 - [x] cloud based
 - [x] database of unknowns
 - [x] admin to answer unknowns
+
+#### Written in Python 3
