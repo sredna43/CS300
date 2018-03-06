@@ -60,7 +60,7 @@ class Server:
 
 
     def respond(self, m):
-        ### BASIC RESPNOSES ###
+        ### BASIC RESPNOSES ### (I know it says "resp - noses" but I'm going to leave it)
         dontknow = ("I don't understand",)
         greetings = ("hello", "hi", "greetings", "sup", "what's up", "hey", "hola")
         farewells = ("goodbye", "bye", "see ya", "adios")
